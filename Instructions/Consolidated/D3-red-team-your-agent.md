@@ -173,7 +173,7 @@ Open **red_team_agent.py** and add code at each commented placeholder.
                 AttackStrategy.Flip,
                 AttackStrategy.Compose([AttackStrategy.Base64, AttackStrategy.ROT13]),
             ],
-            output_path=str(OUTPUT),
+            output_path=str(OUTPUT_DIR),
         )
     ```
 
