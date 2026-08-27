@@ -21,10 +21,13 @@ lab:
 *Part of the **Observe, evaluate, and secure your agents** lab. New here? Start with [Getting started](D0-getting-started.md).*
 
 > **Set up (start here):** This task needs a Foundry project, an **Application Insights
-> resource connected to it**, and the starter code. If you haven't already, complete
-> [Getting started](D0-getting-started.md) to create your project, connect Application
-> Insights, clone the code, and set `PROJECT_ENDPOINT` and `MODEL_DEPLOYMENT_NAME` in
-> `Python/.env`. Then, from the `Python` folder you opened in VS Code, verify you're ready:
+> resource connected to it**, a grounded agent to trace, and the starter code. If you
+> haven't already, complete [Getting started](D0-getting-started.md) to create your
+> project, connect Application Insights, clone the code, and set `PROJECT_ENDPOINT` and
+> `AGENT_NAME` in `Python/.env` (point it at your
+> [Lab B](B-integrate-agents-with-enterprise-knowledge-and-m365.md) agent, or create one
+> with `python ../setup/bootstrap_agent.py`). Then, from the `Python` folder you opened in
+> VS Code, verify you're ready:
 
 ```
 python ../setup/check_env.py --task 1
@@ -93,7 +96,6 @@ Open **traced_agent.py** and add code at each commented placeholder.
     # Add references
     from azure.identity import DefaultAzureCredential
     from azure.ai.projects import AIProjectClient
-    from azure.ai.projects.models import PromptAgentDefinition
     from azure.monitor.opentelemetry import configure_azure_monitor
     from opentelemetry import trace
     ```
@@ -146,23 +148,10 @@ Open **traced_agent.py** and add code at each commented placeholder.
     tracer = trace.get_tracer(__name__)
     ```
 
-1. **Create the agent staff are talking to**:
-
-    ```python
-    # Create the agent staff are talking to
-    agent = project_client.agents.create_version(
-        agent_name=AGENT_NAME,
-        definition=PromptAgentDefinition(
-            model=model_deployment,
-            instructions=INSTRUCTIONS,
-        ),
-    )
-    print(f"Agent created (name: {agent.name}, version: {agent.version})")
-    ```
-
 1. **Ask each question inside its own span** — this is the part that pays off. An outer span
     represents the review; each question gets a child span, tagged with attributes you choose
-    so you can tell them apart in the portal:
+    so you can tell them apart in the portal. This reuses `caldova-knowledge-agent` rather
+    than standing up a separate agent just for this task:
 
     ```python
     # Ask each question inside its own span
@@ -176,19 +165,11 @@ Open **traced_agent.py** and add code at each commented placeholder.
                 response = openai_client.responses.create(
                     conversation=conversation.id,
                     input=question,
-                    extra_body={"agent_reference": {"name": agent.name, "type": "agent_reference"}},
+                    extra_body={"agent_reference": {"name": agent_name, "type": "agent_reference"}},
                 )
                 question_span.set_attribute("caldova.answer_length", len(response.output_text))
                 print(f"\nQ{number}: {question}")
                 print(f"A{number}: {response.output_text}")
-    ```
-
-1. **Clean up the agent version** so you don't leave test agents behind:
-
-    ```python
-    # Clean up resources by deleting the agent version
-    project_client.agents.delete_version(agent_name=agent.name, agent_version=agent.version)
-    print("\nAgent deleted")
     ```
 
 1. Save the file (**Ctrl+S**).
@@ -205,15 +186,11 @@ Open **traced_agent.py** and add code at each commented placeholder.
     python traced_agent.py
     ```
 
-1. You should see the three answers print, then the agent delete itself:
+1. You should see the three answers print:
 
     ```
-    Agent created (name: caldova-planning-assistant, version: 1)
-
     Q1: How long does review take for a capacity request with a complete brief?
     A1: ...
-
-    Agent deleted
     ```
 
     > If you get an error about the connection string, Application Insights isn't connected to
@@ -222,7 +199,7 @@ Open **traced_agent.py** and add code at each commented placeholder.
 ### Read the traces
 
 1. In the [Foundry portal](https://ai.azure.com), open your project, select **Agents**, then
-    **Traces**.
+    **caldova-knowledge-agent**, then **Traces**.
 
 1. Find the most recent trace and select it. Telemetry takes a minute or two to arrive — if
     it isn't there, wait and refresh.

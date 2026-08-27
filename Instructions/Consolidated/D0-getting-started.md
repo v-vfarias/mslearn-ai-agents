@@ -138,9 +138,9 @@ for your agents without any code at all.
 
     > **Tip**: In the Foundry Toolkit VS Code extension, right-click your project deployment and select **Copy Project Endpoint** to get the endpoint URL.
 
-## Get an agent to measure (needed for Tasks 2 and 3)
+## Get an agent to measure (needed for every task)
 
-Tasks 2 and 3 measure a **grounded** agent — one that answers from the Caldova
+Every task uses a **grounded** agent — one that answers from the Caldova
 knowledge base rather than from the model's own memory. You have two ways to get one:
 
 - **You did [Lab B](B-integrate-agents-with-enterprise-knowledge-and-m365.md)**: set `AGENT_NAME`
@@ -159,8 +159,6 @@ knowledge base rather than from the model's own memory. You have two ways to get
 
     This uploads the documents in `Python/knowledge/`, grounds an agent named
     `caldova-knowledge-agent` on them with File Search, and writes `AGENT_NAME` into your `.env`.
-
-> Task 1 doesn't need this agent — it creates and deletes its own.
 
 ## Check you're ready for a task
 
