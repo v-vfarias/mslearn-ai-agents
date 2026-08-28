@@ -23,11 +23,10 @@ lab:
 > **Set up (start here):** This task needs a Foundry project, an **Application Insights
 > resource connected to it**, a grounded agent to trace, and the starter code. If you
 > haven't already, complete [Getting started](D0-getting-started.md) to create your
-> project, connect Application Insights, clone the code, and set `PROJECT_ENDPOINT` and
-> `AGENT_NAME` in `Python/.env` (point it at your
-> [Lab B](B-integrate-agents-with-enterprise-knowledge-and-m365.md) agent, or create one
-> with `python ../setup/bootstrap_agent.py`). Then, from the `Python` folder you opened in
-> VS Code, verify you're ready:
+> project, clone the code, set `PROJECT_ENDPOINT` and `AGENT_NAME` in `Python/.env` (point
+> it at your [Lab B](B-integrate-agents-with-enterprise-knowledge-and-m365.md) agent, or
+> create one with `python ../setup/bootstrap_agent.py`), and connect Application Insights.
+> Then, from the `Python` folder you opened in VS Code, verify you're ready:
 
 ```
 python ../setup/check_env.py --task 1
@@ -79,8 +78,10 @@ them at a different backend tomorrow without rewriting your instrumentation.
 
 > **Server-side traces come free.** Now that Application Insights is connected to your
 > project, Foundry already records traces for agents it hosts — no code required. What you
-> add here is **client-side** instrumentation: spans around *your* code, so you can see your
-> logic and the agent's work in one timeline.
+> add here is **client-side** instrumentation: spans around *your* code. Both land in the same
+> Application Insights resource, but Foundry's **Agents > Traces** page only renders its own
+> server-side view (`Invoke Agent` / `Execute tool` / `Chat`) — to see your own spans and
+> attributes alongside it, you'll look directly at Application Insights.
 
 Open the `Python` folder and activate the virtual environment from [Getting started](D0-getting-started.md) (`.\labenv\Scripts\Activate.ps1`), then continue below.
 
@@ -206,16 +207,29 @@ Open **traced_agent.py** and add code at each commented placeholder.
 
 ### Read the traces
 
+**Two views, two purposes.** Foundry's **Agents > Traces** page shows the automatic
+**server-side** trace of the agent's own turn (`Invoke Agent` > `Execute tool` / `Chat`) — it
+confirms tracing is working, but it doesn't surface the **client-side** spans your script just
+added. To see `morning-planning-review`, `planner-question`, and their custom attributes, look
+at the Application Insights resource itself:
+
 1. In the [Foundry portal](https://ai.azure.com), open your project, select **Agents**, then
-    **caldova-knowledge-agent**, then **Traces**.
+    **caldova-knowledge-agent**, then **Traces**, to confirm the run arrived (telemetry takes a
+    minute or two — wait and refresh if it isn't there yet). Selecting a trace here shows
+    Foundry's own `Invoke Agent` / `Execute tool` / `Chat` view, not your custom spans.
 
-1. Find the most recent trace and select it. Telemetry takes a minute or two to arrive — if
-    it isn't there, wait and refresh.
+1. Open the Application Insights resource in the [Azure portal](https://portal.azure.com):
+    open the resource group you created for this project, and select the Application Insights
+    resource in it.
 
-1. Step through the spans. You should see your `morning-planning-review` span at the top with
-    three `planner-question` children, and inside each one the model call the SDK emitted.
+1. In Application Insights, expand **Investigate** in the left navigation, select **Search**,
+    and search for `morning-planning-review`.
 
-1. Select a `planner-question` span and look at its attributes. Your `caldova.question_number`
+1. Select a matching result to open its **end-to-end transaction details**. This is the raw
+    span tree: your `morning-planning-review` span at the top, three `planner-question`
+    children, and inside each one the model call the SDK emitted.
+
+1. Select a `planner-question` span and look at its properties. Your `caldova.question_number`
     and `caldova.answer_length` are there alongside the standard GenAI attributes.
 
 1. Compare the durations of the three questions. That's the planning lead's complaint,

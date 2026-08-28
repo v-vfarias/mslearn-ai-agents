@@ -95,29 +95,6 @@ git clone https://github.com/MicrosoftLearning/mslearn-ai-agents.git
     > connect that in the portal using the steps below. When you're done with the lab, run
     > `azd down` to delete everything it created.
 
-## Connect Application Insights (needed for Task 1)
-
-Foundry stores traces in an **Application Insights** resource connected to your project. Connect
-one now — it takes a minute, and once it's connected Foundry starts recording server-side traces
-for your agents without any code at all.
-
-1. In the [Foundry portal](https://ai.azure.com), open your project.
-
-1. In the left navigation, select **Agents**, then select **Traces** at the top.
-
-1. Select **Connect**, then either pick an existing Application Insights resource or select
-    **Create new** and complete the wizard.
-
-    > If you don't see the **Connect** button, select **Manage** in the upper right, then
-    > **Project details** > **Connected resources** > **Add connection** > **Application Insights**.
-
-1. To *read* the traces you'll need the **Log Analytics Reader** role on that Application
-    Insights resource. If you created it yourself, you already have it.
-
-> **Why this matters**: your Foundry project can only hand your code a connection string if
-> something is connected. Task 1 asks the project for that string, so this step has to happen
-> first.
-
 ## Get the starter code
 
 1. In VS Code, open the Command Palette (**Ctrl+Shift+P**), run **Git: Clone**, and enter:
@@ -166,6 +143,29 @@ knowledge base rather than from the model's own memory. You have two ways to get
 
     This uploads the documents in `Python/knowledge/`, grounds an agent named
     `caldova-knowledge-agent` on them with File Search, and writes `AGENT_NAME` into your `.env`.
+
+## Connect Application Insights (needed for Task 1)
+
+Foundry stores traces in an **Application Insights** resource connected to your project. Connect
+one now — it takes a minute, and once it's connected Foundry starts recording server-side traces
+for your agents without any code at all.
+
+1. In the [Foundry portal](https://ai.azure.com), open your project.
+
+1. In the left navigation, select **Agents**, then select **Traces** at the top.
+
+1. Select **Connect**, then either pick an existing Application Insights resource or select
+    **Create new** and complete the wizard.
+
+    > If you don't see the **Connect** button, select **Manage** in the upper right, then
+    > **Project details** > **Connected resources** > **Add connection** > **Application Insights**.
+
+1. To *read* the traces you'll need the **Log Analytics Reader** role on that Application
+    Insights resource. If you created it yourself, you already have it.
+
+> **Why this matters**: your Foundry project can only hand your code a connection string if
+> something is connected. Do this before starting Task 1, which asks the project for that
+> string.
 
 ## Check you're ready for a task
 
