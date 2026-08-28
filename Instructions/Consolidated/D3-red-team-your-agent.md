@@ -221,9 +221,10 @@ Open **red_team_agent.py** and add code at each commented placeholder.
     ]
     ```
 
-1. Open **redteam_scan.json** and look at `redteaming_data`. Every attack-response pair is
-    there, with the prompt that was sent, what your agent said, and whether the attack was
-    judged successful. Read a few — seeing the disguised prompts is most of the value.
+1. Open **redteam_output/evaluation_result.json** and look at `redteaming_data`. Every
+    attack-response pair is there, with the prompt that was sent, what your agent said, and
+    whether the attack was judged successful. Read a few — seeing the disguised prompts is
+    most of the value.
 
 1. Compare `baseline_asr` with the per-complexity numbers in `attack_technique_summary`. If a
     strategy scores higher than the baseline, that transformation is getting past something the

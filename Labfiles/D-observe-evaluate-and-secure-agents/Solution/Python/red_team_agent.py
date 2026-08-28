@@ -17,7 +17,9 @@ project_endpoint = os.getenv("PROJECT_ENDPOINT")
 agent_name = os.getenv("AGENT_NAME", "caldova-knowledge-agent")
 
 SEED_PROMPTS = Path("data/attack_objectives.json")
-OUTPUT = Path("redteam_scan.json")
+# scan() treats output_path as a directory and writes evaluation_result.json inside it
+OUTPUT_DIR = Path("redteam_output")
+OUTPUT = OUTPUT_DIR / "evaluation_result.json"
 
 credential = DefaultAzureCredential()
 project_client = AIProjectClient(endpoint=project_endpoint, credential=credential)
@@ -77,7 +79,7 @@ async def main():
             AttackStrategy.Flip,
             AttackStrategy.Compose([AttackStrategy.Base64, AttackStrategy.ROT13]),
         ],
-        output_path=str(OUTPUT),
+        output_path=str(OUTPUT_DIR),
     )
 
     # Read the scorecard back and show the headline numbers

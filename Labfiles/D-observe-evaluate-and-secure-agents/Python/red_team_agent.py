@@ -15,7 +15,7 @@ project_endpoint = os.getenv("PROJECT_ENDPOINT")
 agent_name = os.getenv("AGENT_NAME", "caldova-knowledge-agent")
 
 SEED_PROMPTS = Path("data/attack_objectives.json")
-# scan() treats output_path as a directory and writes eval_result.json inside it
+# scan() treats output_path as a directory and writes evaluation_result.json inside it
 OUTPUT_DIR = Path("redteam_output")
 OUTPUT = OUTPUT_DIR / "evaluation_result.json"
 

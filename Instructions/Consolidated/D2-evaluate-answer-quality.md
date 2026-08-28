@@ -33,8 +33,8 @@ python ../setup/check_env.py --task 2
 ```
 
 > **Continuing from a previous task?** If you just finished another task in the same
-> `Python` folder, your project, virtual environment, and `.env` are already set — but Task 1
-> didn't need `AGENT_NAME`, so check that it's set before you start.
+> `Python` folder, your project, virtual environment, and `.env` are already set — go
+> straight to **Look at the dataset first** below.
 
 ---
 
