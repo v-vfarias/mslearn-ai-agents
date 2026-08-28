@@ -27,5 +27,8 @@ QUESTIONS = [
     # Get a tracer for this script
 
 
+    # Look up the agent so its id can be included in agent_reference
+
+
     # Ask each question inside its own span
 

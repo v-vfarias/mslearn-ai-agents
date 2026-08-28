@@ -148,6 +148,14 @@ Open **traced_agent.py** and add code at each commented placeholder.
     tracer = trace.get_tracer(__name__)
     ```
 
+1. **Look up the agent** — its `id` (not just its name) is needed to correlate traces with
+    this specific agent in the Foundry portal:
+
+    ```python
+    # Look up the agent so its id can be included in agent_reference
+    agent = project_client.agents.get(agent_name=agent_name)
+    ```
+
 1. **Ask each question inside its own span** — this is the part that pays off. An outer span
     represents the review; each question gets a child span, tagged with attributes you choose
     so you can tell them apart in the portal. This reuses `caldova-knowledge-agent` rather
@@ -165,7 +173,7 @@ Open **traced_agent.py** and add code at each commented placeholder.
                 response = openai_client.responses.create(
                     conversation=conversation.id,
                     input=question,
-                    extra_body={"agent_reference": {"name": agent_name, "type": "agent_reference"}},
+                    extra_body={"agent_reference": {"name": agent.name, "id": agent.id, "type": "agent_reference"}},
                 )
                 question_span.set_attribute("caldova.answer_length", len(response.output_text))
                 print(f"\nQ{number}: {question}")

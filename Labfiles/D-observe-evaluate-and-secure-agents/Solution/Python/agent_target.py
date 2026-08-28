@@ -37,15 +37,16 @@ class CaldovaAgentTarget:
         )
         self.openai_client = self.project_client.get_openai_client()
 
-        # Fail early with a useful message rather than once per dataset row.
-        self.project_client.agents.get(agent_name=self.agent_name)
+        # Fail early with a useful message rather than once per dataset row, and keep the
+        # id so agent_reference can correlate traces with this agent.
+        self.agent = self.project_client.agents.get(agent_name=self.agent_name)
 
     def __call__(self, *, query: str, **kwargs) -> dict:
         """Answer one question. Extra dataset columns arrive in kwargs and are ignored."""
         response = self.openai_client.responses.create(
             input=query,
             extra_body={
-                "agent_reference": {"name": self.agent_name, "type": "agent_reference"}
+                "agent_reference": {"name": self.agent.name, "id": self.agent.id, "type": "agent_reference"}
             },
         )
         return {"response": response.output_text}

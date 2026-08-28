@@ -43,6 +43,9 @@ with (
     # Get a tracer for this script
     tracer = trace.get_tracer(__name__)
 
+    # Look up the agent so its id can be included in agent_reference
+    agent = project_client.agents.get(agent_name=agent_name)
+
     # Ask each question inside its own span
     with tracer.start_as_current_span("morning-planning-review") as shift_span:
         shift_span.set_attribute("caldova.site", "ashford")
@@ -54,7 +57,7 @@ with (
                 response = openai_client.responses.create(
                     conversation=conversation.id,
                     input=question,
-                    extra_body={"agent_reference": {"name": agent_name, "type": "agent_reference"}},
+                    extra_body={"agent_reference": {"name": agent.name, "id": agent.id, "type": "agent_reference"}},
                 )
                 question_span.set_attribute("caldova.answer_length", len(response.output_text))
                 print(f"\nQ{number}: {question}")

@@ -72,11 +72,16 @@ portal (the default), or provision them with one command using the Azure Develop
 ### Option B — Provision with azd (optional, one command)
 
 If you'd rather not click through the portal, the lab ships an optional `azd` template that
-creates the Foundry resource, a project, and a model deployment for you.
+creates the Foundry resource, a project, and a model deployment for you. This runs from inside
+the repo, so clone it first if you haven't already:
+
+```
+git clone https://github.com/MicrosoftLearning/mslearn-ai-agents.git
+```
 
 1. Install the [Azure Developer CLI](https://learn.microsoft.com/azure/developer/azure-developer-cli/install-azd).
 
-1. From the `Labfiles/D-observe-evaluate-and-secure-agents` folder, run:
+1. From the `Labfiles/D-observe-evaluate-and-secure-agents` folder in the repo you just cloned, run:
 
     ```
     azd auth login
@@ -120,6 +125,8 @@ for your agents without any code at all.
     ```
     https://github.com/MicrosoftLearning/mslearn-ai-agents.git
     ```
+
+    > If you already cloned the repo for the `azd` option above, skip this and just open it.
 
 1. Open the cloned repo, then **File > Open Folder** and select `mslearn-ai-agents/Labfiles/D-observe-evaluate-and-secure-agents/Python`. This single folder holds the starter code for **every** task in this lab — you use one virtual environment and one `.env` throughout.
 

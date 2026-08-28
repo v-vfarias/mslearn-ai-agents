@@ -22,6 +22,8 @@ OUTPUT = Path("redteam_scan.json")
 credential = DefaultAzureCredential()
 project_client = AIProjectClient(endpoint=project_endpoint, credential=credential)
 openai_client = project_client.get_openai_client()
+# Look up the agent so its id can be included in agent_reference
+agent = project_client.agents.get(agent_name=agent_name)
 
 
 # Build the callback that sends one attack prompt to your agent
@@ -30,7 +32,7 @@ def caldova_agent(query: str) -> str:
     try:
         response = openai_client.responses.create(
             input=query,
-            extra_body={"agent_reference": {"name": agent_name, "type": "agent_reference"}},
+            extra_body={"agent_reference": {"name": agent.name, "id": agent.id, "type": "agent_reference"}},
         )
         return response.output_text
     except Exception as error:  # a blocked prompt is a result, not a crash
