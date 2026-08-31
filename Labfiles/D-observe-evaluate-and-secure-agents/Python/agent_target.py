@@ -8,7 +8,7 @@ your dataset and returns the application's output for that row.
 
 evaluate() calls this once per line of caldova_eval.jsonl, passing the columns
 of that line as keyword arguments, and merges the returned dictionary back into
-the row as `outputs.*`. So returning {"response": ...} makes `${outputs.response}`
+the row as `target.*`. So returning {"response": ...} makes `${target.response}`
 available to every evaluator.
 """
 
